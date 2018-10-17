@@ -1,35 +1,42 @@
 const fs = require('fs');
 
-// fs.writeFile('test/message2.txt', 'This is some content', err => {
-//   if (err) throw err;
-//   console.log('The file has been saved!');
-// });
-
-// index.js
-// fs.writeFile('test/index.js', '', err => {
-//   if (err) throw err;
-//   console.log('The file has been saved!');
-// });
+const fileToUse = 'newTest/';
 
 const forSpecFile =
   "const { expect } = require('chai');\n\ndescribe('', () => {\n\tit('', () => {\n\t\t});\n});";
 
-// spec folder
-fs.mkdir('./spec/', { recursive: true }, err => {
-  fs.writeFile('./spec/index.spec.js', forSpecFile, err => {
-    if (err) throw err;
-    console.log('The file has been saved!');
-  });
+const readme = `#Title\n\nA description of you project goes here.\n`;
+
+const gitignore = 'node_modules\n';
+
+// index.js
+fs.writeFile(`./${fileToUse}index.js`, '', err => {
+  if (err) throw err;
+  console.log('The index.js file has been created!');
 });
 
-// index.spec.js
+// spec folder & index.spec.js
+fs.mkdir(`./${fileToUse}spec/`, { recursive: true }, err => {
+  fs.writeFile(`./${fileToUse}spec/index.spec.js`, forSpecFile, err => {
+    if (err) throw err;
+    console.log('The spec file has been created!');
+  });
+});
 
 // package.json
 
 // README.md
+fs.writeFile(`./${fileToUse}README.md`, readme, err => {
+  if (err) throw err;
+  console.log('readme file created!');
+});
 
 // eslint config file
 
 // .gitignore
+fs.writeFile(`./${fileToUse}.gitgnore`, gitignore, err => {
+  if (err) throw err;
+  console.log('gitignore file created!');
+});
 
 // git repo initialised
