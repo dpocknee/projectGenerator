@@ -6,19 +6,23 @@ const fs = require('fs');
 // });
 
 // index.js
-fs.writeFile('test/index.js', '', err => {
-  if (err) throw err;
-  console.log('The file has been saved!');
-});
+// fs.writeFile('test/index.js', '', err => {
+//   if (err) throw err;
+//   console.log('The file has been saved!');
+// });
+
+const forSpecFile =
+  "const { expect } = require('chai');\n\ndescribe('', () => {\n\tit('', () => {\n\t\t});\n});";
 
 // spec folder
-fs.mkdir('./spec/', { recursive: true }, err => {});
+fs.mkdir('./spec/', { recursive: true }, err => {
+  fs.writeFile('./spec/index.spec.js', forSpecFile, err => {
+    if (err) throw err;
+    console.log('The file has been saved!');
+  });
+});
 
 // index.spec.js
-fs.writeFile('./spec/index.spec.js', '', err => {
-  if (err) throw err;
-  console.log('The file has been saved!');
-});
 
 // package.json
 
