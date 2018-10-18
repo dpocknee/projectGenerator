@@ -76,7 +76,7 @@ exec('npm init -y', (error, stdout, stderr) => {
         exec('npm i chai', (error, stdout, stderr) => {
           console.log('Chai installed');
           // .gitignore
-          fs.writeFile(`./${fileToUse}.gitgnore`, gitignore, err => {
+          fs.writeFile(`./${fileToUse}.gitignore`, gitignore, err => {
             if (err) throw err;
             console.log('gitignore file created!');
             // git repo initialised
