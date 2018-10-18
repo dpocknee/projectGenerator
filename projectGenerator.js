@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { exec }  = require('child_process');
+const { exec } = require('child_process');
 
 const fileToUse = '';
 
@@ -36,7 +36,7 @@ const eslintrc = `{
     "semi": 1,
     "no-multiple-empty-lines": 1
   }
-}` 
+}`;
 
 const gitignore = 'node_modules\n';
 
@@ -56,23 +56,38 @@ fs.mkdir(`./${fileToUse}spec/`, { recursive: true }, err => {
 
 // package.json
 exec('npm init -y', (error, stdout, stderr) => {
-  console.log(stdout[0]);
-  if (stdout[0] === '{') {
-    const packageObj = JSON.parse(stdout);
-    packageObj.scripts = {
-      "test-utils": "mocha ./spec/utils.spec.js",
-      "test-dev": "mocha ./spec/main.spec.js",
-      "test": "mocha ./spec/*.spec.js --bail",
-      "lint": "eslint ./",
-      "posttest": "npm run lint"
-    };
-    fs.writeFile(`./${fileToUse}package.json`, packageObj, err => {
+  const scriptStart = stdout.search(/{/g);
+  const packageObj = JSON.parse(stdout.slice(scriptStart));
+  packageObj.scripts = {
+    'test-utils': 'mocha ./spec/utils.spec.js',
+    'test-dev': 'mocha ./spec/main.spec.js',
+    test: 'mocha ./spec/*.spec.js --bail',
+    lint: 'eslint ./',
+    posttest: 'npm run lint'
+  };
+  fs.writeFile(
+    `./${fileToUse}package.json`,
+    JSON.stringify(packageObj),
+    err => {
       if (err) throw err;
       console.log('The package JSON has been created!');
-    });
-  }  
-  console.log(`${stdout}`);
-  // console.log(`${stderr}`);
+      exec('npm i mocha', (error, stdout, stderr) => {
+        console.log('Mocha installed');
+        exec('npm i chai', (error, stdout, stderr) => {
+          console.log('Chai installed');
+          // .gitignore
+          fs.writeFile(`./${fileToUse}.gitgnore`, gitignore, err => {
+            if (err) throw err;
+            console.log('gitignore file created!');
+            // git repo initialised
+            exec('git init', (error, stdout, stderr) => {
+              console.log('git repo initialised');
+            });
+          });
+        });
+      });
+    }
+  );
 });
 
 // README.md
@@ -85,16 +100,4 @@ fs.writeFile(`./${fileToUse}README.md`, readme, err => {
 fs.writeFile(`./${fileToUse}.eslintrc`, eslintrc, err => {
   if (err) throw err;
   console.log('.eslintrc file created!');
-});
-
-// .gitignore
-fs.writeFile(`./${fileToUse}.gitgnore`, gitignore, err => {
-  if (err) throw err;
-  console.log('gitignore file created!');
-});
-
-// git repo initialised
-exec('git init', (error, stdout, stderr) => {
-  console.log(`${stdout}`);
-  console.log(`${stderr}`);
 });
